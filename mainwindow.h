@@ -8,6 +8,13 @@ QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
 QT_END_NAMESPACE
 
+
+constexpr int ColName = 0;
+constexpr int ColDisplay = 1;
+constexpr int ColState = 2;
+constexpr int ColPid = 3;
+constexpr int ColType = 4;
+
 class MainWindow : public QMainWindow
 {
 	Q_OBJECT
@@ -26,6 +33,8 @@ private slots:
 	void on_bStop_clicked();
 
 private:
+	void updateService(int row, const QString& svcName);
+	void updateServiceStatus(int row, const SERVICE_STATUS_PROCESS& status );
 	void refreshServiceTable();
 	void openManager();
 	bool rdOnly = false;

@@ -46,6 +46,31 @@ void ensureRowColumns(QTableWidget* tw, int row, int columns)
 
 
 
+void MainWindow::updateServiceStatus(int row, const SERVICE_STATUS_PROCESS& status )
+{
+	auto iState = ui->svcTable->item(row, ColState);
+	auto iPid = ui->svcTable->item(row, ColPid);
+	auto iType = ui->svcTable->item(row, ColType);
+	iState->setText(QWinServiceManager::serviceStateText(status.dwCurrentState));
+	iPid->setText(status.dwProcessId ? QString::number(status.dwProcessId, 16) : QString());
+	iType->setText(QWinServiceManager::serviceTypeText(status.dwServiceType));
+
+}
+
+void MainWindow::updateService(int row, const QString& svcName)
+{
+
+	auto iDisplay = ui->svcTable->item(row, ColDisplay);
+	QWinService svc = this->svcManager.openService(svcName, false);
+	if (svc.isOpen())
+	{
+		iDisplay->setText(svc.display());
+		const auto status = svc.status();
+		updateServiceStatus(row, status);
+	}
+
+
+}
 
 void MainWindow::refreshServiceTable()
 {
@@ -53,21 +78,12 @@ void MainWindow::refreshServiceTable()
 	auto list = svcManager.list(true);
 	ui->svcTable->setRowCount(list.size());
 	int row = 0;
-	for (const auto& service : list )
+	for (const auto& name : list )
 	{
 		ensureRowColumns(ui->svcTable, row, 5);
-		auto iName  = ui->svcTable->item(row, 0);
-		auto iDisplay = ui->svcTable->item(row, 1);
-		auto iState = ui->svcTable->item(row, 2);
-		auto iPid = ui->svcTable->item(row, 3);
-		auto iType = ui->svcTable->item(row, 4);
-
-		iName->setText(service.name);
-		iDisplay->setText(service.display);
-		iState->setText(QWinServiceManager::serviceStateText(service.status.dwCurrentState));
-		iPid->setText(service.status.dwProcessId ? QString::number(service.status.dwProcessId, 16) : QString());
-		iType->setText(QWinServiceManager::serviceTypeText(service.status.dwServiceType));
-
+		auto iName  = ui->svcTable->item(row, ColName);
+		iName->setText(name);
+		updateService(row, name);
 		++row;
 	}
 }
@@ -88,6 +104,7 @@ void MainWindow::on_svcTable_itemSelectionChanged()
 		QWinService svc = svcManager.openService(svcName, !rdOnly);
 		ui->bStart->setDisabled(svc.isRunning());
 		ui->bStop->setEnabled(!svc.isStopped());
+		updateServiceStatus(ui->svcTable->currentRow(), svc.status());
 	}
 }
 

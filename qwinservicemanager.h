@@ -5,14 +5,6 @@
 #include <QObject>
 #include <QList>
 
-struct ServiceEntry
-{
-	QString name;
-	QString display;
-	SERVICE_STATUS_PROCESS status;
-};
-
-using QServiceList = QList<ServiceEntry>;
 
 class QWinService
 {
@@ -28,6 +20,7 @@ public:
 	QString errorString();
 	quint32 error();
 	QString name();
+	QString display();
 	bool isRunning();
 	bool isStartPending();
 	bool isStopped();
@@ -38,9 +31,11 @@ public:
 	int  win32ExitCode();
 	int  serviceExitCode();
 
+
 private:
 	QWinService() = default;
 	void close();
+	LPQUERY_SERVICE_CONFIG  config();
 	SC_HANDLE svcHandle = nullptr;
 	QString svcName;
 	quint32 errorCode = 0;
@@ -58,8 +53,8 @@ public:
 	bool isOpen();
 	QString errorString();
 	static QString errorString(quint32 errorCode);
-	QServiceList list(bool svc32, bool driver = false);
-	QServiceList list(quint32 flags);
+	QStringList list(bool svc32, bool driver = false);
+	QStringList list(quint32 flags);
 	static QString serviceStateText(quint32 state);
 	static QString serviceTypeText(quint32 type);
 	static bool isHandleValid(SC_HANDLE handle);

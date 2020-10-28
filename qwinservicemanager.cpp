@@ -70,15 +70,15 @@ QString QWinServiceManager::errorString(quint32 errorCode)
 }
 
 
-QServiceList QWinServiceManager::list(bool svc32,  bool driver)
+QStringList QWinServiceManager::list(bool svc32,  bool driver)
 {
 	quint32 serviceType = (svc32 ? SERVICE_WIN32 : 0) | (driver ? SERVICE_DRIVER : 0);
 	return list(serviceType );
 }
 
-QServiceList QWinServiceManager::list(quint32 serviceType)
+QStringList QWinServiceManager::list(quint32 serviceType)
 {
-	QServiceList svcList;
+	QStringList svcList;
 	if (isOpen())
 	{
 
@@ -101,11 +101,9 @@ QServiceList QWinServiceManager::list(quint32 serviceType)
 				LPENUM_SERVICE_STATUS_PROCESS end = begin + svcCount;
 				while (begin < end)
 				{
-					ServiceEntry svcStatus ;// {QString::fromWCharArray(begin->lpServiceName), QString::fromWCharArray(begin->lpDisplayName), begin->ServiceStatusProcess };
-					svcStatus.name = QString::fromWCharArray(begin->lpServiceName);
-					svcStatus.display = QString::fromWCharArray(begin->lpDisplayName);
-					svcStatus.status = begin->ServiceStatusProcess;
-					svcList.append(svcStatus);
+
+					QString name = QString::fromWCharArray(begin->lpServiceName);
+					svcList.append(name);
 					++begin;
 				}
 			}
@@ -274,4 +272,25 @@ SERVICE_STATUS_PROCESS QWinService::status()
 	return status;
 }
 
+LPQUERY_SERVICE_CONFIG  QWinService::config()
+{
+	LPQUERY_SERVICE_CONFIG cfg = nullptr;
+	DWORD bytesNeed = 0;
+	QueryServiceConfig(svcHandle, nullptr, 0, &bytesNeed);
+	if (bytesNeed)
+	{
+		cfg = reinterpret_cast<LPQUERY_SERVICE_CONFIG>(new char [bytesNeed]);
+		if (cfg)
+		{
+			QueryServiceConfig(svcHandle, cfg, bytesNeed, &bytesNeed);
+		}
+	}
+	errorCode = GetLastError();
+	return cfg;
+}
 
+QString QWinService::display()
+{
+	std::unique_ptr<QUERY_SERVICE_CONFIG> cfg(config());
+	return cfg && cfg->lpDisplayName ? QString::fromWCharArray( cfg->lpDisplayName ) : QString();
+}

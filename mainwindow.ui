@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>MainWindow</class>
+ <widget class="QMainWindow" name="MainWindow">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>804</width>
+    <height>536</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>MainWindow</string>
+  </property>
+  <widget class="QWidget" name="centralwidget">
+   <layout class="QHBoxLayout" name="horizontalLayout">
+    <item>
+     <widget class="QTableWidget" name="svcTable">
+      <column>
+       <property name="text">
+        <string>Сервис</string>
+       </property>
+      </column>
+      <column>
+       <property name="text">
+        <string>Наименование</string>
+       </property>
+      </column>
+      <column>
+       <property name="text">
+        <string>Состояние</string>
+       </property>
+      </column>
+      <column>
+       <property name="text">
+        <string>pid</string>
+       </property>
+      </column>
+      <column>
+       <property name="text">
+        <string>Тип</string>
+       </property>
+      </column>
+     </widget>
+    </item>
+    <item>
+     <layout class="QVBoxLayout" name="verticalLayout">
+      <item>
+       <widget class="QPushButton" name="bRefresh">
+        <property name="text">
+         <string>Обновить</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QPushButton" name="bStart">
+        <property name="text">
+         <string>Старт</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QPushButton" name="bStop">
+        <property name="text">
+         <string>Стоп</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <spacer name="verticalSpacer">
+        <property name="orientation">
+         <enum>Qt::Vertical</enum>
+        </property>
+        <property name="sizeHint" stdset="0">
+         <size>
+          <width>20</width>
+          <height>40</height>
+         </size>
+        </property>
+       </spacer>
+      </item>
+     </layout>
+    </item>
+   </layout>
+  </widget>
+  <widget class="QMenuBar" name="menubar">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>804</width>
+     <height>21</height>
+    </rect>
+   </property>
+  </widget>
+  <widget class="QStatusBar" name="statusbar"/>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>

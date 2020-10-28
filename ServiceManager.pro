@@ -21,12 +21,16 @@ HEADERS += \
 FORMS += \
 	mainwindow.ui
 
-
-win32{
 CONFIG += embed_manifest_exe
-QMAKE_LFLAGS_WINDOWS += /MANIFESTUAC:"level='requireAdministrator' "
 
+CONFIG(release, debug|release){
+	QMAKE_LFLAGS_WINDOWS += /MANIFESTUAC:"level='requireAdministrator' "
 }
+else{
+	QMAKE_LFLAGS_WINDOWS += /MANIFESTUAC:"level='asInvoker' "
+}
+
+#CONFIG(debug, debug|release)
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin

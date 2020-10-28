@@ -31,7 +31,6 @@ public:
 	int  win32ExitCode();
 	int  serviceExitCode();
 
-
 private:
 	QWinService() = default;
 	void close();
@@ -64,7 +63,6 @@ private:
 	void updateError();
 	SC_HANDLE sc_handle = 0;
 	quint32 errorCode = 0;
-
 };
 
 inline bool QWinService::isRunning()

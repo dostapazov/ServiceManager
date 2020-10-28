@@ -1,9 +1,7 @@
 #include "qwinservicemanager.h"
 #include <QThread>
 
-
 #pragma comment(lib, "advapi32.lib")
-
 
 QWinServiceManager::QWinServiceManager(QObject* parent) : QObject(parent)
 {
@@ -21,14 +19,12 @@ bool QWinServiceManager::open(bool readOnly)
 	sc_handle = OpenSCManager(NULL, SERVICES_ACTIVE_DATABASE, access);
 	updateError();
 	return isOpen();
-
 }
 
 void QWinServiceManager::updateError()
 {
 	errorCode = GetLastError();
 }
-
 
 void QWinServiceManager::close()
 {
@@ -42,11 +38,11 @@ bool QWinServiceManager::isHandleValid(SC_HANDLE handle)
 {
 	return handle && handle != INVALID_HANDLE_VALUE;
 }
+
 bool QWinServiceManager::isOpen()
 {
 	return  isHandleValid(sc_handle);
 }
-
 
 QString QWinServiceManager::errorString()
 {
@@ -69,7 +65,6 @@ QString QWinServiceManager::errorString(quint32 errorCode)
 
 }
 
-
 QStringList QWinServiceManager::list(bool svc32,  bool driver)
 {
 	quint32 serviceType = (svc32 ? SERVICE_WIN32 : 0) | (driver ? SERVICE_DRIVER : 0);
@@ -81,7 +76,6 @@ QStringList QWinServiceManager::list(quint32 serviceType)
 	QStringList svcList;
 	if (isOpen())
 	{
-
 		SC_ENUM_TYPE infoLevel = SC_ENUM_PROCESS_INFO;
 		DWORD state = SERVICE_STATE_ALL;
 		char buffer[0x10000];
@@ -130,6 +124,7 @@ QString QWinServiceManager::serviceTypeText(quint32 type)
 			return "Unknown service type";
 	}
 }
+
 QString QWinServiceManager::serviceStateText(quint32 state)
 {
 	static const char* stateText[] =
@@ -159,7 +154,6 @@ QWinService QWinServiceManager::openService(QString svcName, bool allAccess)
 	svc.errorCode = GetLastError();
 	return svc;
 }
-
 
 bool QWinService::isOpen()
 {
@@ -224,7 +218,6 @@ bool QWinService::start(const QStringList& arguments)
 	}
 	return ret;
 }
-
 
 bool QWinService::stop()
 {
@@ -294,3 +287,4 @@ QString QWinService::display()
 	std::unique_ptr<QUERY_SERVICE_CONFIG> cfg(config());
 	return cfg && cfg->lpDisplayName ? QString::fromWCharArray( cfg->lpDisplayName ) : QString();
 }
+

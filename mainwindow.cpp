@@ -16,7 +16,6 @@ MainWindow::~MainWindow()
 	delete ui;
 }
 
-
 void MainWindow::openManager()
 {
 	if (!svcManager.open(false))
@@ -31,7 +30,6 @@ void MainWindow::openManager()
 	setWindowTitle(titleStr);
 }
 
-
 void ensureRowColumns(QTableWidget* tw, int row, int columns)
 {
 	if (tw->rowCount() <= row)
@@ -44,8 +42,6 @@ void ensureRowColumns(QTableWidget* tw, int row, int columns)
 	}
 }
 
-
-
 void MainWindow::updateServiceStatus(int row, const SERVICE_STATUS_PROCESS& status )
 {
 	auto iState = ui->svcTable->item(row, ColState);
@@ -54,12 +50,10 @@ void MainWindow::updateServiceStatus(int row, const SERVICE_STATUS_PROCESS& stat
 	iState->setText(QWinServiceManager::serviceStateText(status.dwCurrentState));
 	iPid->setText(status.dwProcessId ? QString::number(status.dwProcessId, 16) : QString());
 	iType->setText(QWinServiceManager::serviceTypeText(status.dwServiceType));
-
 }
 
 void MainWindow::updateService(int row, const QString& svcName)
 {
-
 	auto iDisplay = ui->svcTable->item(row, ColDisplay);
 	QWinService svc = this->svcManager.openService(svcName, false);
 	if (svc.isOpen())
@@ -68,8 +62,6 @@ void MainWindow::updateService(int row, const QString& svcName)
 		const auto status = svc.status();
 		updateServiceStatus(row, status);
 	}
-
-
 }
 
 void MainWindow::refreshServiceTable()
@@ -87,8 +79,6 @@ void MainWindow::refreshServiceTable()
 		++row;
 	}
 }
-
-
 
 void MainWindow::on_bRefresh_clicked()
 {
@@ -119,7 +109,6 @@ void MainWindow::on_bStart_clicked()
 		QStatusBar* statusBar = this->statusBar();
 		statusBar->showMessage(svc.errorString(), 5000);
 		on_svcTable_itemSelectionChanged();
-
 	}
 }
 
@@ -136,5 +125,4 @@ void MainWindow::on_bStop_clicked()
 		on_svcTable_itemSelectionChanged();
 
 	}
-
 }
